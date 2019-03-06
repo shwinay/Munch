@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import FoodCard from "./components/FoodCard";
 import AcceptDeny from "./components/AcceptDeny";
 import Filter from "./components/Filter";
+import History from "./components/History";
 import "./App.css";
 import firebase from "./firebase.js";
 
@@ -11,7 +12,10 @@ class App extends Component {
   state = {
     foodCards: [],
     area: "",
-    description: ""
+    description: "",
+    link: "",
+    imageLink: "",
+    history: false
   };
 
   dbRef = firebase.database().ref("preferences");
@@ -27,13 +31,7 @@ class App extends Component {
     return (
       <React.Fragment>
         <Navbar />
-        {this.state.foodCards.map(foodCard => (
-          <div> {foodCard} </div>
-        ))}
-        <AcceptDeny
-          getNewCard={this.getNewCard}
-          getNewCardAccept={this.getNewCardAccept}
-        />
+        {this.getContent()}
       </React.Fragment>
     );
   }
@@ -52,6 +50,8 @@ class App extends Component {
           );
           this.state.area = data.meals[0].strArea;
           this.state.description = data.meals[0].strMeal;
+          this.state.link = data.meals[0].strSource;
+          this.state.imageLink = data.meals[0].strMealThumb;
           this.setState({});
         });
       }
@@ -66,11 +66,57 @@ class App extends Component {
   getNewCardAccept = () => {
     let acceptedFood = {
       food: this.state.description,
-      area: this.state.area
+      area: this.state.area,
+      link: this.state.link,
+      imageLink: this.state.imageLink
     };
     this.dbRef.push(acceptedFood);
     this.state.foodCards = [];
     this.fetchFood();
+  };
+
+  getContent() {
+    if (!this.state.history) {
+      return (
+        <React.Fragment>
+          <center>
+            {this.state.foodCards.map(foodCard => (
+              <div> {foodCard} </div>
+            ))}
+            <AcceptDeny
+              getNewCard={this.getNewCard}
+              getNewCardAccept={this.getNewCardAccept}
+            />
+            {this.getHistoryToggleButton()}
+          </center>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <History handleHistoryToggle={this.handleHistoryToggle} />
+        </React.Fragment>
+      );
+    }
+  }
+
+  getHistoryToggleButton = () => {
+    return (
+      <React.Fragment>
+        <button
+          type="button"
+          onClick={this.handleHistoryToggle}
+          className="btn btn-secondary m-4"
+        >
+          View History
+        </button>
+      </React.Fragment>
+    );
+  };
+
+  handleHistoryToggle = () => {
+    this.state.history = !this.state.history;
+    this.setState({});
   };
 }
 
