@@ -13,14 +13,14 @@ class AcceptDeny extends Component {
             onClick={this.handleDeny}
             className="btn btn-danger m-4"
           >
-            Hate
+            Trash
           </button>
           <button
             type="button"
             onClick={this.handleAccept}
             className="btn btn-success m-4"
           >
-            Love
+            Munch
           </button>
         </center>
       </React.Fragment>

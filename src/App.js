@@ -6,6 +6,7 @@ import AcceptDeny from "./components/AcceptDeny";
 import Filter from "./components/Filter";
 import History from "./components/History";
 import "./App.css";
+import Jumbotron from "./components/Jumbotron";
 import firebase from "./firebase.js";
 
 class App extends Component {
@@ -30,7 +31,7 @@ class App extends Component {
   render() {
     return (
       <React.Fragment>
-        <Navbar />
+        <Jumbotron />
         {this.getContent()}
       </React.Fragment>
     );
